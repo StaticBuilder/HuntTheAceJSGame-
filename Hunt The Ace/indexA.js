@@ -55,6 +55,12 @@ function createCard(cardItem){
 
   //asign class to front image element of front of card
   addClassToElement(cardFrontImg, 'card-img')
+
+  //add front image element as child element to front card element
+  addChildElement(cardFrontElem, cardFrontImg)
+
+  //add back image element as child element to back card element
+  addChildElement(cardBackElem, cardBackImg)
 }
 function createElement(elemType){
   return document.createElement(elemType)
@@ -70,4 +76,8 @@ function addidToElement(elem, id){
 
 function addSrcToImageElem(imgElem, src){
   imgElem.src = src
+}
+
+function addChildElement(parentElem, childElem){
+  parentElem.appendChild(childElem)
 }
