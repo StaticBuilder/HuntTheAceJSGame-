@@ -13,6 +13,9 @@ let cards = []
 
 const playGameButtonElem = document.getElementById('playGame'); 
 
+const collapsedGridAreaTemplate = '"a a" "a a"';
+const cardCollectionCellClass = ".card-pos-a"
+
 loadGame();
 
 function loadGame(){
@@ -22,6 +25,7 @@ function loadGame(){
 
   playGameButtonElem.addEventListener('click', startGame)
 
+  console.log(cards);
 }
 
 function startGame(){
@@ -35,10 +39,40 @@ function initializeNewGame(){
 
 function startRound(){
   initializeNewGame()
+  collectCards()
 }
 
 function initializeNewRound(){
 
+}
+
+function collectCards(){
+  transformGridArea(collapsedGridAreaTemplate)
+  addCardToGridAreaCell(cardCollectionCellClass)
+}
+
+function transformGridArea(areas){
+  cardContainerElem.style.gridTemplateAreas = areas
+}
+
+function addCardToGridAreaCell(cellPositionClassName)
+{
+  const cellPositionElem = document.querySelector(cellPositionClassName)
+
+  // Remove all children from the card container
+  while (cardContainerElem.firstChild) {
+    cardContainerElem.removeChild(cardContainerElem.firstChild);
+  }
+
+  // Clear the content of the cell before adding a new card
+  cellPositionElem.innerHTML = '';
+
+  // Add only the first card to the specified cell
+  const card = cards[0];
+  addChildElement(cellPositionElem, card);
+
+  // Add the modified cell back to the card container
+  cardContainerElem.appendChild(cellPositionElem);
 }
 
 function createCards() {
@@ -145,4 +179,3 @@ function mapCardIdToGridCell(card) {
     return '.card-pos-d';
   }
 }
-
