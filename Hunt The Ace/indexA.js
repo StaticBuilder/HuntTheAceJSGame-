@@ -45,6 +45,7 @@ function initializeNewGame(){
 function startRound(){
   initializeNewGame()
   collectCards()
+  flipCards(true)
   shuffleCards()
 }
 
@@ -95,58 +96,58 @@ function addCardToGridAreaCell(cellPositionClassName) {
 
   
 
-  function displayTopCardOnly() {
-    // Clear all cells before adding new cards
-    const cells = document.querySelectorAll('.card-pos-a, .card-pos-b, .card-pos-c, .card-pos-d');
-    cells.forEach(cell => cell.innerHTML = '');
-  
-    // Add only the top card (the first card in the array) to the specified cell
-    const topCard = cards[0];
-    if (topCard) {
-      const cellPositionElem = document.querySelector(cardCollectionCellClass);
-      cellPositionElem.innerHTML = ''; // Clear any existing content
-  
-      // Make the cell fit the entire grid
-      cellPositionElem.style.gridArea = 'a';
-  
-      // Center the top card within the grid cell
-      cellPositionElem.style.display = 'flex';
-      cellPositionElem.style.justifyContent = 'center';
-      cellPositionElem.style.alignItems = 'center';
-  
-      topCard.style.position = 'relative';
-      topCard.style.width = '162px';  // Set to normal size
-      topCard.style.height = '220px'; // Set to normal size
-      topCard.style.transform = 'none';
-      
-      cellPositionElem.appendChild(topCard);
-    }
+function displayTopCardOnly() {
+  // Clear all cells before adding new cards
+  const cells = document.querySelectorAll('.card-pos-a, .card-pos-b, .card-pos-c, .card-pos-d');
+  cells.forEach(cell => cell.innerHTML = '');
+
+  // Add only the top card (the first card in the array) to the specified cell
+  const topCard = cards[0];
+  if (topCard) {
+    const cellPositionElem = document.querySelector(cardCollectionCellClass);
+    cellPositionElem.innerHTML = ''; // Clear any existing content
+
+    // Make the cell fit the entire grid
+    cellPositionElem.style.gridArea = 'a';
+
+    // Center the top card within the grid cell
+    cellPositionElem.style.display = 'flex';
+    cellPositionElem.style.justifyContent = 'center';
+    cellPositionElem.style.alignItems = 'center';
+
+    topCard.style.position = 'relative';
+    topCard.style.width = '162px';  // Set to normal size
+    topCard.style.height = '220px'; // Set to normal size
+    topCard.style.transform = 'none';
+    
+    cellPositionElem.appendChild(topCard);
   }
+}
   
-  
-  function shuffleCards()
+
+function shuffleCards()
+{
+  randomizeCardPositions()
+  const id = setInterval(shuffle, 12)
+  let shuffleCount = 0
+
+  function shuffle()
   {
-    randomizeCardPositions()
-    const id = setInterval(shuffle, 12)
-    let shuffleCount = 0
-  
-    function shuffle()
+    if(shuffleCount == 500)
     {
-      if(shuffleCount == 100)
-      {
-        clearInterval(id)
-        dealCards();
-      }
-      else {
-        shuffleCount++;
-        console.log(shuffleCount);
-        if (shuffleCount === 1) {
-          // Remove all cards and leave the top card only
-          displayTopCardOnly();
-        }
+      clearInterval(id)
+      dealCards();
+    }
+    else {
+      shuffleCount++;
+      console.log(shuffleCount);
+      if (shuffleCount === 1) {
+        // Remove all cards and leave the top card only
+        displayTopCardOnly();
       }
     }
   }
+}
 
 function randomizeCardPositions()
 {
