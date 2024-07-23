@@ -56,25 +56,24 @@ function transformGridArea(areas){
   cardContainerElem.style.gridTemplateAreas = areas
 }
 
-function addCardToGridAreaCell(cellPositionClassName)
-{
-  const cellPositionElem = document.querySelector(cellPositionClassName)
+function addCardToGridAreaCell(cellPositionClassName) {
+  const cellPositionElem = document.querySelector(cellPositionClassName);
 
-  // Remove all children from the card container
-  while (cardContainerElem.firstChild) {
-    cardContainerElem.removeChild(cardContainerElem.firstChild);
-  }
-
-  // Clear the content of the cell before adding a new card
+  // Clear the content of the cell before adding new cards
   cellPositionElem.innerHTML = '';
 
-  // Add only the first card to the specified cell
-  const card = cards[0];
-  addChildElement(cellPositionElem, card);
+  // Add all cards to the specified cell and stack them
+  cards.forEach((card, index) => {
+    card.style.position = 'absolute';
+    card.style.top = '0';
+    card.style.left = '0';
+    addChildElement(cellPositionElem, card);
+  });
 
   // Add the modified cell back to the card container
   cardContainerElem.appendChild(cellPositionElem);
 }
+
 
 function createCards() {
   cardObjectDefinitions.forEach((cardItem) => {
