@@ -9,6 +9,38 @@ const cardBackImgPath = 'images/card-back-blue.png'; // Corrected path
 
 const cardContainerElem = document.querySelector('.card-container');
 
+let cards = []
+
+const playGameButtonElem = document.getElementById('playGame'); 
+
+loadGame();
+
+function loadGame(){
+  createCards();
+
+  cards = document.querySelectorAll('.card')
+
+  playGameButtonElem.addEventListener('click', startGame)
+
+}
+
+function startGame(){
+  initializeNewGame()
+  startRound()
+}
+
+function initializeNewGame(){
+
+}
+
+function startRound(){
+  initializeNewGame()
+}
+
+function initializeNewRound(){
+
+}
+
 function createCards() {
   cardObjectDefinitions.forEach((cardItem) => {
     createCard(cardItem);
@@ -114,4 +146,3 @@ function mapCardIdToGridCell(card) {
   }
 }
 
-createCards();
