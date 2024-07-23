@@ -13,7 +13,8 @@ let cards = []
 
 const playGameButtonElem = document.getElementById('playGame'); 
 
-const collapsedGridAreaTemplate = '"a a" "a a"';
+const collapsedGridAreaTemplate = '"a a" "a a"';//const collapsedGridAreaTemplate = '"a a"';
+const originalGridAreaTemplate = '"a b" "c d"';
 const cardCollectionCellClass = ".card-pos-a"
 
 const numCards = cardObjectDefinitions.length
@@ -44,7 +45,7 @@ function initializeNewGame(){
 function startRound(){
   initializeNewGame()
   collectCards()
-  flipCards(true)
+  shuffleCards()
 }
 
 function initializeNewRound(){
@@ -53,7 +54,7 @@ function initializeNewRound(){
 
 function collectCards(){
   transformGridArea(collapsedGridAreaTemplate)
-  addCardToGridAreaCell(cardCollectionCellClass)
+  
 }
 
 function transformGridArea(areas){
@@ -61,6 +62,19 @@ function transformGridArea(areas){
 }
 
 function addCardToGridAreaCell(cellPositionClassName) {
+  // Clear all cells before adding new cards
+  const cells = document.querySelectorAll('.card-pos-a, .card-pos-b, .card-pos-c, .card-pos-d');
+  cells.forEach(cell => cell.innerHTML = '');
+
+  // Add all cards to their respective cells
+  cards.forEach((card, index) => {
+    const cellPositionClassName = mapCardIdToGridCell(card);
+    const cellPositionElem = document.querySelector(cellPositionClassName);
+    addChildElement(cellPositionElem, card);
+  });
+}
+
+/* function addCardToGridAreaCellA(cellPositionClassName) {
   const cellPositionElem = document.querySelector(cellPositionClassName);
 
   // Clear the content of the cell before adding new cards
@@ -77,43 +91,124 @@ function addCardToGridAreaCell(cellPositionClassName) {
 
   // Add the modified cell back to the card container
   cardContainerElem.appendChild(cellPositionElem);
-}
+}  */
 
-function shuffleCards()
-{
-  randomizeCardPositions()
-  const id = setInterval(shuffle, 12)
-  let shuffleCount = 0
+  
 
-  function shuffle()
-  {
-    if(shuffleCount == 500)
-    {
-      clearInterval(id)
-    }
-    else {
-      shuffleCount++;
+  function displayTopCardOnly() {
+    // Clear all cells before adding new cards
+    const cells = document.querySelectorAll('.card-pos-a, .card-pos-b, .card-pos-c, .card-pos-d');
+    cells.forEach(cell => cell.innerHTML = '');
+  
+    // Add only the top card (the first card in the array) to the specified cell
+    const topCard = cards[0];
+    if (topCard) {
+      const cellPositionElem = document.querySelector(cardCollectionCellClass);
+      cellPositionElem.innerHTML = ''; // Clear any existing content
+  
+      // Make the cell fit the entire grid
+      cellPositionElem.style.gridArea = 'a';
+  
+      // Center the top card within the grid cell
+      cellPositionElem.style.display = 'flex';
+      cellPositionElem.style.justifyContent = 'center';
+      cellPositionElem.style.alignItems = 'center';
+  
+      topCard.style.position = 'relative';
+      topCard.style.width = '162px';  // Set to normal size
+      topCard.style.height = '220px'; // Set to normal size
+      topCard.style.transform = 'none';
+      
+      cellPositionElem.appendChild(topCard);
     }
   }
-}
+  
+  
+  function shuffleCards()
+  {
+    randomizeCardPositions()
+    const id = setInterval(shuffle, 12)
+    let shuffleCount = 0
+  
+    function shuffle()
+    {
+      if(shuffleCount == 100)
+      {
+        clearInterval(id)
+        dealCards();
+      }
+      else {
+        shuffleCount++;
+        console.log(shuffleCount);
+        if (shuffleCount === 1) {
+          // Remove all cards and leave the top card only
+          displayTopCardOnly();
+        }
+      }
+    }
+  }
 
 function randomizeCardPositions()
 {
-  const random1 = Math.floor(Math.random() * numCards) + 1
-  const random2 = Math.floor(Math.random() * numCards) + 1
-
-  const temp = cardPositions[random1 - 1]
-
-  cardPositions[random1 - 1] = cardPositions[random2 - 1]
-  cardPositions[random2 - 1] = temp
-
-
+  for (let i = cardPositions.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [cardPositions[i], cardPositions[j]] = [cardPositions[j], cardPositions[i]];
+  }
 }
 
 function createCards() {
   cardObjectDefinitions.forEach((cardItem) => {
     createCard(cardItem);
   });
+}
+
+function dealCards(){
+  addCardsToAppropriateCell();
+
+  const areasTemplate = returnGridAreasMappedToCardPos();
+
+  transformGridArea(areasTemplate)
+}
+
+function returnGridAreasMappedToCardPos()
+{
+  let firstPart = "";
+  let secondPart = "";
+  let areas = "";
+
+  cards.forEach((card, index) => {
+    if(cardPositions[index] == 1){
+      areas += "a ";
+    }
+    else if(cardPositions[index] == 2){
+      areas += "b ";
+    }
+    else if (cardPositions[index] == 3)
+    {
+      areas += "c ";
+    }
+    else if (cardPositions[index] == 4)
+    {
+      areas += "d ";
+    }
+    if(index == 1)
+    {
+      firstPart = areas.trim();
+      areas = "";
+    }
+    else if (index == 3)
+    {
+      secondPart = areas.trim();
+    }
+  });
+
+  return `"${firstPart}" "${secondPart}"`;
+}
+
+function addCardsToAppropriateCell(){
+  cards.forEach((card) => {
+    addCardToGridCell(card)
+  })
 }
 
 function flipCard(card, flipToBack){
@@ -126,7 +221,6 @@ function flipCard(card, flipToBack){
   {
     innerCardElem.classList.remove('flip-it')
   }
-
 }
 
 function flipCards(flipToBack){
