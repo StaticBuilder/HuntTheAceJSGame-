@@ -65,8 +65,9 @@ function addCardToGridAreaCell(cellPositionClassName) {
   // Add all cards to the specified cell and stack them
   cards.forEach((card, index) => {
     card.style.position = 'absolute';
-    card.style.top = '0';
-    card.style.left = '0';
+    card.style.top = '50%';
+    card.style.left = '50%';
+    card.style.transform = 'translate(-50%, -50%)';
     addChildElement(cellPositionElem, card);
   });
 
