@@ -1,9 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
-:root{
-  --card-width: 157px;
-  --card-height: 220px;
+
+:root {
+  --card-width-lg: 157px;
+  --card-height-lg: 220px;
+
+  --card-width-sm: 120px;
+  --card-height-sm: 168px;
+
   --num-cards: 4;
-  --card-horizontal-space: 100px; /* Adjusted horizontal space */
+
+  --card-horizontal-space-lg: 100px;
+  --card-horizontal-space-sm: 50px;
+
   --badge-bg-color: darkgrey;
   --primary-color: black;
   --secondary-color: #ffffff;
@@ -21,54 +29,45 @@ main {
   display: flex;
   justify-content: center;
   align-items: center; /* Centering vertically */
- 
 }
 
 .card-container {
   position: relative;
   height: 100%;
-  width: calc(var(--card-width) * 2 + var(--card-horizontal-space) * (2 - 1)); /* Width for 2 columns and spaces */
+  width: calc(var(--card-width-lg) * 2 + var(--card-horizontal-space-lg) * (2 - 1)); /* Width for 2 columns and spaces */
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
-  grid-template-areas: "a b"
-                       "c d";
-  
-  
+  grid-template-areas: 
+    "a b"
+    "c d";
 }
 
-.card-pos-a{
+.card-pos-a {
   grid-area: a;
-  /* border: 1px solid black;
-  background-color: aqua; */
 }
-.card-pos-b{
+.card-pos-b {
   grid-area: b;
-  /* border: 1px solid black;
-  background-color: aquamarine; */
 }
-.card-pos-c{
+.card-pos-c {
   grid-area: c;
-  /* border: 1px solid black;
-  background-color: blueviolet; */
 }
-.card-pos-d{
+.card-pos-d {
   grid-area: d;
-  /* border: 1px solid black;
-  background-color: gold; */
 }
 
-.card-pos-a, .card-pos-b, .card-pos-c, .card-pos-d{
+.card-pos-a, .card-pos-b, .card-pos-c, .card-pos-d {
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 .card {
-  height: var(--card-height);
-  width: var(--card-width);
+  height: var(--card-height-lg);
+  width: var(--card-width-lg);
   perspective: 1000px;
   cursor: pointer;
-  transition: transform 0.6s ease-in-out
+  transition: transform 0.6s ease-in-out;
 }
 
 .card-inner {
@@ -99,27 +98,29 @@ main {
 .card:hover .card-inner {
   transform: rotateY(180deg);
 }
-.card-inner.flip-it{
+
+.card-inner.flip-it {
   transform: rotateY(180deg);
 }
 
-.header{
+.header {
   display: flex;
   flex-direction: column;
   margin-bottom: 10px;
 }
-.header-title-container{
+
+.header-title-container {
   display: flex;
   justify-content: center;
 }
 
-.header-round-info-container{
+.header-round-info-container {
   display: flex;
   justify-content: space-evenly;
 }
 
-.current-status{
-  font-size:1.5rem;
+.current-status {
+  font-size: 1.5rem;
   text-align: center;
 }
 
@@ -128,7 +129,7 @@ main {
 .header-score-container,
 .header-round-container,
 .game-play-button-container,
-.header-img-container{
+.header-img-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -136,33 +137,31 @@ main {
 
 .header-score-container,
 .header-round-container,
-.header-img-container
-{
+.header-img-container {
   width: 150px;
 }
 
-.header-img{
+.header-img {
   height: 75px;
   border-radius: 5px;
   border: 1px solid black;
   padding: 5px;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   transform: rotate(-3deg);
 }
 
-.badge{
+.badge {
   background-color: var(--badge-bg-color);
   color: var(--secondary-color);
   padding: 2px 10px 3px;
   border-radius: 15px;
 }
 
-.game-play-button-container{
-  width:150px;
-  height:70px;
+.game-play-button-container {
+  width: 150px;
+  height: 70px;
 }
 
-/* CSS */
 .play-game {
   --b: 3px;   /* border thickness */
   --s: .45em; /* size of the corner */
@@ -171,9 +170,9 @@ main {
   padding: calc(.5em + var(--s)) calc(.9em + var(--s));
   color: var(--color);
   --_p: var(--s);
-  background:
-    conic-gradient(from 90deg at var(--b) var(--b),#0000 90deg,var(--color) 0)
-    var(--_p) var(--_p)/calc(100% - var(--b) - 2*var(--_p)) calc(100% - var(--b) - 2*var(--_p));
+  background: 
+    conic-gradient(from 90deg at var(--b) var(--b), #0000 90deg, var(--color) 0)
+    var(--_p) var(--_p) / calc(100% - var(--b) - 2 * var(--_p)) calc(100% - var(--b) - 2 * var(--_p));
   transition: .3s linear, color 0s, background-color 0s;
   outline: var(--b) solid #0000;
   outline-offset: .6em;
@@ -191,9 +190,8 @@ main {
   pointer-events: none;
 }
 
-
 .play-game:hover,
-.play-game:focus-visible{
+.play-game:focus-visible {
   --_p: 0px;
   outline-color: var(--color);
   outline-offset: .05em;
@@ -204,18 +202,57 @@ main {
   color: #fff;
 }
 
-@keyframes game-play-button-fade-in{
-  from{opacity: 0;}
-  to{opacity: 1;}
+@keyframes game-play-button-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-.card.shuffle-left{
+.card.shuffle-left {
   transform: translateX(300px) translateY(40px);
 }
-.card.shuffle-right{
+
+.card.shuffle-right {
   transform: translateX(-350px) translateY(-40px);
 }
 
-.card.fly-in{
+.card.fly-in {
   transform: translateY(-1000px) translateX(-600px) rotate(45deg);
+}
+
+@media screen and (max-width: 600px) {
+  .card {
+    width: var(--card-width-sm);
+    height: var(--card-height-sm);
+  }
+
+  .card-container {
+    width: calc(var(--card-width-sm) * (var(--num-cards) / 2) + var(--card-horizontal-space-sm));
+  }
+
+  main {
+    height: 50%;
+  }
+
+  .current-status {
+    font-size: 1.2rem;
+  }
+
+  .game-play-button-container {
+    width: 120px;
+    height: 40px;
+  }
+
+  #playGame {
+    padding: 6px 8px;
+    font-size: 12px;
+    min-height: 40px;
+  }
+
+  .header-img {
+    height: 55px;
+  }
 }
