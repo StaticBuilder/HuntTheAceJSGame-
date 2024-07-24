@@ -127,6 +127,10 @@ function canChooseCard() {
 function loadGame() {
   createCards();
   cards = document.querySelectorAll('.card');
+
+  cardFlyInEffect()
+  
+
   playGameButtonElem.addEventListener('click', startGame);
 
   updateStatusElement(scoreContainerElem, "none")
@@ -192,7 +196,71 @@ function addCardToGridAreaCell(cellPositionClassName) {
   });
 }
 
-function displayTopCardOnly() {
+function displayAllCardsStacked() {
+  // Clear all card positions
+  const cells = document.querySelectorAll('.card-pos-a, .card-pos-b, .card-pos-c, .card-pos-d');
+  cells.forEach(cell => cell.innerHTML = '');
+
+  // Get the container where cards will be stacked
+  const stackContainer = document.querySelector(cardCollectionCellClass);
+  stackContainer.innerHTML = '';
+
+  // Style the container
+  stackContainer.style.gridArea = 'a'; // or adjust based on your layout
+  stackContainer.style.position = 'relative'; // Ensure it's positioned correctly
+  stackContainer.style.width = '162px'; // Match card width
+  stackContainer.style.height = '220px'; // Match card height
+  stackContainer.style.display = 'flex';
+  stackContainer.style.justifyContent = 'center';
+  stackContainer.style.alignItems = 'center';
+  stackContainer.style.overflow = 'hidden'; // Ensure cards are contained
+
+  // Stack all cards on top of each other
+  cards.forEach((card, index) => {
+    card.style.position = 'absolute'; // Position all cards absolutely within the container
+    card.style.width = '162px'; // Match card width
+    card.style.height = '220px'; // Match card height
+    card.style.top = '0'; // Align all cards to the top
+    card.style.left = '0'; // Align all cards to the left
+    card.style.zIndex = cards.length - index; // Ensure cards stack correctly with the last card on top
+    stackContainer.appendChild(card); // Add card to the container
+  });
+}
+
+
+/* function displayAllCardsStacked() {
+  // Clear all card positions
+  const cells = document.querySelectorAll('.card-pos-a, .card-pos-b, .card-pos-c, .card-pos-d');
+  cells.forEach(cell => cell.innerHTML = '');
+
+  // Get the container where cards will be stacked
+  const stackContainer = document.querySelector(cardCollectionCellClass);
+  stackContainer.innerHTML = '';
+
+  // Style the container
+  stackContainer.style.gridArea = 'a'; // or adjust based on your layout
+  stackContainer.style.position = 'relative'; // Ensure it's positioned correctly
+  stackContainer.style.width = '162px'; // Match card width
+  stackContainer.style.height = '220px'; // Match card height
+  stackContainer.style.display = 'flex';
+  stackContainer.style.justifyContent = 'center';
+  stackContainer.style.alignItems = 'center';
+  stackContainer.style.overflow = 'hidden'; // Ensure cards are contained
+
+  // Stack all cards on top of each other
+  cards.forEach((card, index) => {
+    card.style.position = 'absolute'; // Position all cards absolutely within the container
+    card.style.width = '162px'; // Match card width
+    card.style.height = '220px'; // Match card height
+    card.style.top = '0'; // Align all cards to the top
+    card.style.left = '0'; // Align all cards to the left
+    card.style.zIndex = index; // Ensure cards stack correctly
+    stackContainer.appendChild(card); // Add card to the container
+  });
+} */
+
+
+/* function displayTopCardOnly() {
   const cells = document.querySelectorAll('.card-pos-a, .card-pos-b, .card-pos-c, .card-pos-d');
   cells.forEach(cell => cell.innerHTML = '');
 
@@ -213,27 +281,81 @@ function displayTopCardOnly() {
     
     cellPositionElem.appendChild(topCard);
   }
+} */
+
+
+  function cardFlyInEffect()
+  {
+      const id = setInterval(flyIn, 5)
+      let cardCount = 0
+  
+      let count = 0
+  
+      function flyIn()
+      {
+          count++
+          if(cardCount == numCards)
+          {
+              clearInterval(id)
+              playGameButtonElem.style.display = "inline-block"            
+          }
+          if(count == 1 || count == 250 || count == 500 || count == 750)
+          {
+              cardCount++
+              let card = document.getElementById(cardCount)
+              card.classList.remove("fly-in")
+          }
+      }
+  
+  
+  
+  }
+
+function removeShuffleClasses()
+{
+    cards.forEach((card) =>{
+        card.classList.remove("shuffle-left")
+        card.classList.remove("shuffle-right")
+    })
+}
+
+function animateShuffle(shuffleCount) {
+  const random1 = Math.floor(Math.random() * numCards) + 1;
+  const random2 = Math.floor(Math.random() * numCards) + 1;
+
+  let card1 = document.getElementById(random1);
+  let card2 = document.getElementById(random2);
+
+  if (card1 && shuffleCount % 4 === 0) {
+      card1.classList.toggle("shuffle-left");
+      card1.style.zIndex = 100;
+  }
+  if (card2 && shuffleCount % 10 === 0) {
+      card2.classList.toggle("shuffle-right");
+      card2.style.zIndex = 200;
+  }
 }
 
 function shuffleCards() {
   randomizeCardPositions();
-  const id = setInterval(shuffle, 12);
   let shuffleCount = 0;
-
-  function shuffle() {
-    if (shuffleCount == 500) {
-      clearInterval(id);
-      shufflingInProgress = false;
-      dealCards();
-      updateStatusElement(currentGameStatusElem, "block", primaryColor, "Please click the card that you think is the Ace of Spades 🤔💭");
-    } else {
+  const id = setInterval(() => {
       shuffleCount++;
-      updateStatusElement(currentGameStatusElem, "block", primaryColor, "Shuffling🔃🔃🔃🔃");
-      if (shuffleCount === 1) {
-        displayTopCardOnly();
+      animateShuffle(shuffleCount);
+
+      if (shuffleCount === 500) {
+          clearInterval(id);
+          shufflingInProgress = false;
+          removeShuffleClasses();
+          dealCards();
+          updateStatusElement(currentGameStatusElem, "block", primaryColor, "Please click the card that you think is the Ace of Spades 🤔💭");
+      } else {
+          updateStatusElement(currentGameStatusElem, "block", primaryColor, "Shuffling🔃🔃🔃🔃");
+          if (shuffleCount === 1) {
+              displayTopCardOnly();
+          }
       }
-    }
-  }
+  }, 12);
 }
 
 function randomizeCardPositions() {
@@ -318,6 +440,7 @@ function createCard(cardItem) {
 
   // Add class and id to card element
   addClassToElement(cardElem, 'card');
+  addClassToElement (cardElem, 'fly-in');
   addIdToElement(cardElem, cardItem.id);
 
   // Add class to inner card element
