@@ -128,9 +128,6 @@ function loadGame() {
   createCards();
   cards = document.querySelectorAll('.card');
   playGameButtonElem.addEventListener('click', startGame);
-
-  updateStatusElement(scoreContainerElem, "none")
-  updateStatusElement(roundContainerElem, "none")
 }
 
 function startGame() {
